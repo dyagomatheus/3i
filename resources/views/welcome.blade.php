@@ -328,8 +328,8 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
                               </div>
 
                             <div class="row mb-3" id="form">
-
                                 <div class="col-md-4">
+                                    <label>Modelos<label>
                                     <div class="form-group">
                                         <select name="product_id[]" style="width:100%; height:50px;" required="">
                                         <option value="Selecionar Modelos" disabled selected>Selecionar Modelos</option>
@@ -342,23 +342,27 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label>Quantidade<label>
                                         <input class="form-control" id="qty" name="qty[]" placeholder="Quantidade" type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="value[]">Valor <label>
                                         <input class="form-control" id="value[]" name="value[]" placeholder="Valor conforme NF Origem " type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label>Número<label>
                                         <input class="form-control" id="number_nf[]" name="number_nf[]" placeholder="Número NF de Origem " type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
+                                    <label>Data NF de Origem<label>
                                     <div class="form-group">
                                         <input class="form-control" id="date_nf[]" name="date_nf[]" placeholder="Data NF de Origem" type="date" required>
                                     </div>
@@ -366,6 +370,8 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                                 <div class="col-md-4">
                                     <div class="form-group">
+                                        <label>Defeito<label>
+
                                         <select name="defect[]" style="width:100%; height:50px;" required="">
                                             <option value="Selecionar defeito">Defeito apresentado</option>
                                             <option value="Blocks the Page (Tranca a Pag.)">Blocks the Page (Tranca a Pag.)</option>
