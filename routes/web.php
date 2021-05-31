@@ -16,6 +16,8 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 Route::get('/devolution/edit/{id}', [DashboardController::class, 'devolutionEdit'])->middleware(['auth'])->name('devolution.edit');
 Route::post('/devolution/update/{id}', [DashboardController::class, 'devolutionUpdate'])->middleware(['auth'])->name('devolution.update');
+Route::get('/devolution/create', [DashboardController::class, 'devolutionCreate'])->middleware(['auth'])->name('devolution.create');
+Route::post('/devolution/store', [DashboardController::class, 'devolutionStore'])->middleware(['auth'])->name('devolution.store');
 Route::get('/devolution/show/{id}', [DashboardController::class, 'devolutionShow'])->middleware(['auth'])->name('devolution.show');
 Route::get('import-models', function () {
     return view('import');

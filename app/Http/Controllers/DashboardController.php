@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\Devolution as MailDevolution;
+use App\Mail\NewDevolution;
 use App\Models\Devolution;
 use App\Models\DevolutionStatus;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,5 +96,65 @@ class DashboardController extends Controller
         return view('devolution.details', [
             'devolution' => $devolution
         ]);
+    }
+
+    public function devolutionCreate()
+    {
+        $products = Product::all();
+        return view('devolution.new', [
+            'products' => $products
+        ]);
+    }
+
+    public function devolutionStore(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'product_id' => 'required',
+            'qty' => 'required',
+            'value' => 'required',
+            'number_nf' => 'required',
+            'date_nf' => 'required',
+            'defect' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+
+                $devolution = Devolution::create([
+                    'client_id' => $user->client_id,
+                    'product_id' => $request->product_id,
+                    'qty' => $request->qty,
+                    'value' => $request->value,
+                    'number_nf' => $request->number_nf,
+                    'date_nf' => $request->date_nf,
+                    'defect' => $request->defect
+                ]);
+
+                $comment = 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.';
+                DevolutionStatus::create([
+                    'status' => 'Enviado',
+                    'devolution_id' => $devolution->id,
+                    'comment' => $comment
+                ]);
+
+                $mail = $user->email;
+
+                Mail::to($mail)->send(new MailDevolution('Enviado', $comment));
+                Mail::to(env('MAIL_FROM_ADDRESS'))->send(new NewDevolution());
+
+            DB::commit();
+
+            return redirect()
+                ->route('login');
+
+        } catch (\Throwable $th) {
+            Log::info("error: Cadastro Cliente". $th->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'Ocorreu um erro no seu pedido, por favor tente novamente!');
+            DB::rollBack();
+        }
     }
 }

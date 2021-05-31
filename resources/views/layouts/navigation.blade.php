@@ -15,6 +15,11 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if (Auth::user()->type == 'client')
+                    <x-nav-link :href="route('devolution.create')" :active="request()->routeIs('devolution.create')">
+                        {{ __('Nova Devolução') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 
