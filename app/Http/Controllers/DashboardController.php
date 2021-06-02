@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\Devolution as MailDevolution;
 use App\Mail\NewDevolution;
+use App\Models\Client;
 use App\Models\Devolution;
 use App\Models\DevolutionStatus;
 use App\Models\Product;
@@ -19,15 +20,26 @@ class DashboardController extends Controller
     public function index()
     {
         if (auth()->user()->type == 'admin') {
+            session()->forget('product_id');
+            session()->forget('client_id');
+
+            $products = Product::get();
+            $clients = Client::get();
             $devolutions = Devolution::paginate(5);
+
+            return view('dashboard', [
+                'devolutions' => $devolutions,
+                'clients' => $clients,
+                'products' => $products
+            ]);
 
         }else{
             $devolutions = Devolution::where('client_id', auth()->user()->client_id)->paginate(5);
-        }
 
-        return view('dashboard', [
-            'devolutions' => $devolutions
-        ]);
+            return view('dashboard', [
+                'devolutions' => $devolutions
+            ]);
+        }
     }
 
     public function devolutionEdit($id)
@@ -155,6 +167,33 @@ class DashboardController extends Controller
                 ->back()
                 ->with('error', 'Ocorreu um erro no seu pedido, por favor tente novamente!');
             DB::rollBack();
+        }
+    }
+
+    public function devolutionSearch(Request $request)
+    {
+        if (auth()->user()->type == 'admin') {
+            $products = Product::get();
+            $clients = Client::get();
+            $devolutions = Devolution::whereNotNull('product_id');
+
+            session()->put('product_id', $request->product_id);
+            session()->put('client_id', $request->client_id);
+
+            if($request->client_id) {
+                $devolutions = $devolutions->where('client_id', $request->client_id);
+            }
+            if($request->product_id) {
+                $devolutions = $devolutions->where('product_id', $request->product_id);
+            }
+
+            $devolutions = $devolutions->paginate(100);
+            return view('dashboard', [
+                'devolutions' => $devolutions,
+                'clients' => $clients,
+                'products' => $products
+            ]);
+
         }
     }
 }
