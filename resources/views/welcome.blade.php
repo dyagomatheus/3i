@@ -308,12 +308,6 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
                                         <input class="form-control" id="contact" name="contact" placeholder="Contato*" type="text">
                                     </div>
                                 </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <input class="form-control" id="communication" name="communication" placeholder="Comunicação*" type="text">
-                                    </div>
-                                </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <input class="form-control" id="password" name="password" placeholder="Senha" type="password" required>

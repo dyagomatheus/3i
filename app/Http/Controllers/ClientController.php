@@ -49,7 +49,6 @@ class ClientController extends Controller
             'cnpj' => 'required|unique:clients',
             'phone' => 'nullable',
             'contact' => 'required',
-            'communication' => 'required',
             'password' => 'required',
             'email' => 'required|unique:users',
             'product_id' => 'required',
@@ -67,8 +66,7 @@ class ClientController extends Controller
                 'name' => $request->name,
                 'cnpj' => $request->cnpj,
                 'phone' => $request->phone,
-                'contact' => $request->contact,
-                'communication' => $request->communication,
+                'contact' => $request->contact
             ]);
 
             User::create([
