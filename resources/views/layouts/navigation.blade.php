@@ -20,6 +20,17 @@
                         {{ __('Nova Devolução') }}
                     </x-nav-link>
                     @endif
+                    @if (Auth::user()->type == 'admin')
+                    <x-nav-link :href="route('product.index')" :active="request()->routeIs('product.index')">
+                        {{ __('Produtos/Modelos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('defect.index')" :active="request()->routeIs('defect.index')">
+                        {{ __('Defeitos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('client.index')" :active="request()->routeIs('client.index')">
+                        {{ __('Clientes') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 

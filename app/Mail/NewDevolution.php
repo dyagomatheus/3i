@@ -30,6 +30,8 @@ class NewDevolution extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.new_devolution');
+        return $this
+                ->subject('Nova Devolução RMA Cadastrado')
+                ->view('mails.new_devolution');
     }
 }

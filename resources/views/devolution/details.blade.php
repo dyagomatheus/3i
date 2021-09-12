@@ -27,6 +27,14 @@
                 <div>
                     <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
                         <p class="text-gray-600">
+                            Processo:
+                        </p>
+                        <p>
+                            {{$devolution->number}}
+                        </p>
+                    </div>
+                    <div class="md:grid md:grid-cols-2 hover:bg-gray-50 md:space-y-0 space-y-1 p-4 border-b">
+                        <p class="text-gray-600">
                             Número da NF:
                         </p>
                         <p>
@@ -81,6 +89,9 @@
                         Status
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4">
+                        Tempo
+                    </th>
+                    <th class="font-semibold text-sm uppercase px-6 py-4">
                         Comentário
                     </th>
                 </tr>
@@ -105,6 +116,11 @@
                                     </p>
                                 </div>
                             </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-gray-500 text-sm font-semibold tracking-wide">
+                                {{$status->time}}
+                            </p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="text-gray-500 text-sm font-semibold tracking-wide">

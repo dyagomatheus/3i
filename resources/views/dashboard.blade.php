@@ -17,6 +17,15 @@
                 <form action="{{route('devolution.search')}}" method="POST" class="ml-2">
                     @csrf
                     <div class="relative mr-6 my-2">
+                        <select name="status" id="status" class="bg-purple-white shadow rounded border-0 p-3">
+                            <option value="" disabled selected>-- Pesquisar Status -- </option>
+                            <option value="Enviado" {{session('status') =='Enviado'? 'selected' : ''}} >Enviado</option>
+                            <option value="Recebido" {{session('status') =='Recebido'? 'selected' : ''}}>Recebido</option>
+                            <option value="Em processamento" {{session('status') =='Em processamento'? 'selected' : ''}}>Em processamento</option>
+                            <option value="Aprovado Parcial" {{session('status') =='Aprovado Parcial'? 'selected' : ''}}>Aprovado Parcial</option>
+                            <option value="Negado" {{session('status') == 'Negado'? 'selected' : ''}}>Negado</option>
+                        </select>
+                        <input value="{{session('date')}}" type="date" name="date" id="date" class="bg-purple-white shadow rounded border-0 p-3" placeholder="Data">
                         <select name="client_id" id="client_id" class="bg-purple-white shadow rounded border-0 p-3">
                             <option value="" disabled selected>-- Pesquisar Cliente -- </option>
                             @foreach ($clients as $client)
@@ -49,6 +58,9 @@
             <thead class="bg-gray-50">
                 <tr class="text-gray-600 text-left">
                     <th class="font-semibold text-sm uppercase px-6 py-4">
+                        Processo
+                    </th>
+                    <th class="font-semibold text-sm uppercase px-6 py-4">
                         Produto
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4">
@@ -80,6 +92,15 @@
             <tbody class="divide-y divide-gray-200">
                 @foreach ($devolutions as $devolution)
                     <tr>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                <div>
+                                    <p class="">
+                                        {{$devolution->number}}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-3">
                                 <div>

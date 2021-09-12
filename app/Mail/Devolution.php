@@ -33,7 +33,8 @@ class Devolution extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.devolutions', [
+        return $this->subject('Atualização no seu pedido de Devolução RMA')
+            ->view('mails.devolutions', [
             'status' => $this->status,
             'comment' => $this->comment
         ]);

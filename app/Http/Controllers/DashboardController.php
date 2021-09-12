@@ -9,6 +9,7 @@ use App\Models\Devolution;
 use App\Models\DevolutionStatus;
 use App\Models\Product;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,8 @@ class DashboardController extends Controller
         if (auth()->user()->type == 'admin') {
             session()->forget('product_id');
             session()->forget('client_id');
+            session()->forget('date');
+            session()->forget('status');
 
             $products = Product::get();
             $clients = Client::get();
@@ -66,14 +69,27 @@ class DashboardController extends Controller
         try {
             DB::beginTransaction();
 
+            $status = Devolution::status($id);
+            $today = new DateTime();
+
+            $lastUpdate = new DateTime($status->created_at);
+            $status->time = $lastUpdate->diff($today)->d .' Dias e ' . $lastUpdate->diff($today)->h . ' Horas';
+            $status->save();
+
             DevolutionStatus::create([
                 'status' => $request->status,
                 'devolution_id' => $id,
-                'comment' => $request->comment
+                'comment' => $request->comment,
             ]);
+
+            $devolution->status = $request->status;
+            $devolution->save();
+
             foreach ($devolution->client->users as $user) {
                 $mail = $user->email;
             }
+
+
             Mail::to($mail)->send(new MailDevolution($request->status, $request->comment));
             DB::commit();
 
@@ -83,7 +99,6 @@ class DashboardController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            dd($th);
             Log::info("error: Atualização Pedido". $th->getMessage());
             return redirect()
                 ->back()
@@ -133,6 +148,9 @@ class DashboardController extends Controller
         try {
             DB::beginTransaction();
 
+            do {
+                $number = rand(100000, 999999);
+            } while (Devolution::where("number", "=", $number)->first() instanceof Devolution);
 
                 $devolution = Devolution::create([
                     'client_id' => $user->client_id,
@@ -141,7 +159,9 @@ class DashboardController extends Controller
                     'value' => $request->value,
                     'number_nf' => $request->number_nf,
                     'date_nf' => $request->date_nf,
-                    'defect' => $request->defect
+                    'defect' => $request->defect,
+                    'status' => 'Enviado',
+                    'number' => $number
                 ]);
 
                 $comment = 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.';
@@ -179,15 +199,26 @@ class DashboardController extends Controller
 
             session()->put('product_id', $request->product_id);
             session()->put('client_id', $request->client_id);
+            session()->put('date', $request->date);
+            session()->put('status', $request->status);
 
             if($request->client_id) {
                 $devolutions = $devolutions->where('client_id', $request->client_id);
             }
+
             if($request->product_id) {
                 $devolutions = $devolutions->where('product_id', $request->product_id);
             }
 
-            $devolutions = $devolutions->paginate(100);
+            if($request->date) {
+                $devolutions = $devolutions->whereDate('created_at', $request->date);
+            }
+
+            if($request->status) {
+                $devolutions = $devolutions->where('status', 'like', '%'.$request->status.'%');
+            }
+
+            $devolutions = $devolutions->paginate(10000);
             return view('dashboard', [
                 'devolutions' => $devolutions,
                 'clients' => $clients,

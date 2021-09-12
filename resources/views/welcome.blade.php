@@ -265,6 +265,7 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 • Para devoluções realizadas fora do estado de origem, as devoluções deverão ser preenchidas da seguinte forma:<br>
 • <b>Devolução de Mercadoria – CFOP 6.202 para produtos sem ST ou 6.411 para produtos com ST:</b> Discriminar nas informações complementares (Dados Adicionais) as informações da Nota Fiscal de Venda, como número da Nota Fiscal e data da emissão. <b>Seguir modelo fornecido pela 3i Distribuidora.</b><br><br><br>
 
+            <a class="btn btn-info" href="http://www.rma3i.com.br/devolucaorma/login">Já tenho cadastro</a>
 
                         </p>
 
@@ -297,18 +298,18 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                             <div class="row">
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <input class="form-control" id="phone" name="phone" placeholder="Telefone" type="text">
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <input class="form-control" id="contact" name="contact" placeholder="Contato*" type="text">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <input class="form-control" id="password" name="password" placeholder="Senha" type="password" required>
                                     </div>
@@ -321,9 +322,8 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                               </div>
 
-                            <div class="row mb-3" id="form">
+                            <div class="row mb-4 mt-2" id="form">
                                 <div class="col-md-4">
-                                    <label>Modelos<label>
                                     <div class="form-group">
                                         <select name="product_id[]" style="width:100%; height:50px;" required="">
                                         <option value="Selecionar Modelos" disabled selected>Selecionar Modelos</option>
@@ -336,45 +336,36 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Quantidade<label>
                                         <input class="form-control" id="qty" name="qty[]" placeholder="Quantidade" type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="value[]">Valor <label>
                                         <input class="form-control" id="value[]" name="value[]" placeholder="Valor conforme NF Origem " type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Número<label>
                                         <input class="form-control" id="number_nf[]" name="number_nf[]" placeholder="Número NF de Origem " type="text" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label>Data NF de Origem<label>
                                     <div class="form-group">
                                         <input class="form-control" id="date_nf[]" name="date_nf[]" placeholder="Data NF de Origem" type="date" required>
+                                        <small id="emailHelp" class="form-text text-muted">Data NF de Origem</small>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Defeito<label>
-
                                         <select name="defect[]" style="width:100%; height:50px;" required="">
                                             <option value="Selecionar defeito">Defeito apresentado</option>
-                                            <option value="Blocks the Page (Tranca a Pag.)">Blocks the Page (Tranca a Pag.)</option>
-                                            <option value="Exploded (explodiu)">Exploded (explodiu)</option>
-                                            <option value="Leaking (vazando)">Leaking (vazando)</option>
-                                            <option value="Not recognize (não reconhece)">Not recognize (não reconhece)</option>
-                                            <option value="Print failures (falha impressão)">Print failures (falha impressão)</option>
-                                            <option value="Problem of Gear (Engrenagem)">Problem of Gear (Engrenagem)</option>
-                                            <option value="Smudge on pag (Mancha)">Smudge on pag (Mancha) </option>
+                                            @foreach ($defects as $defect)
+                                                <option value="{{$defect->name}}">{{$defect->name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -392,7 +383,7 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                             <div style="margin-top: 3%" class="col-md-12">
                                 <div class="row">
-                                    <button style="width: 200px" type="submit" name="BTEnvia" id="submit">
+                                    <button class="btn btn-primary" style="width: 200px" type="submit" name="BTEnvia" id="submit">
                                         Enviar <i class="fa fa-paper-plane"></i>
                                     </button>
                                 </div>

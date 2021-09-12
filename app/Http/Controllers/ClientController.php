@@ -23,7 +23,11 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::paginate(5);
+
+        return view('client.list', [
+            'clients' => $clients
+        ]);
     }
 
     /**
@@ -77,7 +81,12 @@ class ClientController extends Controller
                 'type' => 'client'
             ]);
 
+            do {
+                $number = rand(100000, 999999);
+            } while (Devolution::where("number", "=", $number)->first() instanceof Devolution);
+
             for ($i=0; $i < count($request->product_id); $i++) {
+
                 $devolution = Devolution::create([
                     'client_id' => $client->id,
                     'product_id' => $request->product_id[$i],
@@ -86,6 +95,8 @@ class ClientController extends Controller
                     'number_nf' => $request->number_nf[$i],
                     'date_nf' => $request->date_nf[$i],
                     'defect' => $request->defect[$i],
+                    'number' => $number,
+                    'status' => 'Enviado'
                 ]);
 
                 $comment = 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.';
@@ -103,14 +114,13 @@ class ClientController extends Controller
                 Mail::to(env('MAIL_FROM_ADDRESS'))->send(new NewDevolution());
             }
 
-
-
             DB::commit();
 
             return redirect()
-                ->route('login');
+                ->route('login')->with('mensagem', 'Devolução RMA cadastrada com sucesso! Acesse para acompanhar!');
 
         } catch (\Throwable $th) {
+            dd($th);
             Log::info("error: Cadastro Cliente". $th->getMessage());
             return redirect()
                 ->back()
@@ -163,4 +173,25 @@ class ClientController extends Controller
     {
         //
     }
+
+    public function search(Request $request)
+    {
+        $clients = Client::orderBy('name');
+
+        session()->put('client_name', $request->client_name);
+        session()->put('cnpj', $request->cnpj);
+        if($request->client_name) {
+            $clients = $clients->where('name', 'like', '%'.$request->client_name.'%');
+        }
+        if($request->cnpj) {
+            $clients = $clients->where('cnpj', 'like', '%'.$request->cnpj.'%');
+        }
+
+        $clients = $clients->paginate(10000);
+
+        return view('client.list', [
+            'clients' => $clients
+        ]);
+    }
+
 }

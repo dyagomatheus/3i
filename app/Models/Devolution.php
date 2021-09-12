@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\DevolutionStatuss;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Devolution extends Model
 {
@@ -20,7 +21,8 @@ class Devolution extends Model
         'number_nf',
         'date_nf',
         'defect',
-        'status'
+        'status',
+        'number'
     ];
 
     /**
@@ -58,5 +60,15 @@ class Devolution extends Model
     public function statuses(): HasMany
     {
         return $this->hasMany(DevolutionStatus::class, 'devolution_id', 'id');
+    }
+
+    /**
+     * Get the last status associated with the Devolution
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function getLastStatus(): HasOne
+    {
+        return $this->hasOne(DevolutionStatus::class)->orderBy('id', 'desc');
     }
 }
