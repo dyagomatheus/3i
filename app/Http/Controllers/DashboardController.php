@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DevolutionExport;
 use App\Mail\Devolution as MailDevolution;
 use App\Mail\NewDevolution;
 use App\Models\Client;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
@@ -226,5 +228,34 @@ class DashboardController extends Controller
             ]);
 
         }
+    }
+
+
+    public function exportExcel()
+    {
+        $devolutions = Devolution::whereNotNull('product_id');
+
+            if(session()->get('client_id')) {
+                $devolutions = $devolutions->where('client_id', session()->get('client_id'));
+            }
+
+            if(session()->get('product_id')) {
+                $devolutions = $devolutions->where('product_id', session()->get('product_id'));
+            }
+
+            if(session()->get('date')) {
+                $devolutions = $devolutions->whereDate('created_at', session()->get('date'));
+            }
+
+            if(session()->get('status')) {
+                $devolutions = $devolutions->where('status', 'like', '%'.session()->get('status').'%');
+            }
+
+            $devolutions = $devolutions->get();
+
+        $report = new DevolutionExport();
+
+        $report->devolutions = $devolutions;
+        return Excel::download($report, "RMA.xlsx");
     }
 }

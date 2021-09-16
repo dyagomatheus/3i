@@ -26,6 +26,7 @@ Route::get('/devolution/create', [DashboardController::class, 'devolutionCreate'
 Route::post('/devolution/store', [DashboardController::class, 'devolutionStore'])->middleware(['auth'])->name('devolution.store');
 Route::get('/devolution/show/{id}', [DashboardController::class, 'devolutionShow'])->middleware(['auth'])->name('devolution.show');
 Route::post('/devolution/search', [DashboardController::class, 'devolutionSearch'])->middleware(['auth'])->name('devolution.search');
+Route::get('/devolution/export-excel', [DashboardController::class, 'exportExcel'])->middleware(['auth'])->name('devolution.export.excel');
 
 Route::resource('product', ProductController::class);
 Route::any('product/search', [ProductController::class, 'search'])->name('product.search');
