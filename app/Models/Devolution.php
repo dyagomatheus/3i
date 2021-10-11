@@ -16,7 +16,6 @@ class Devolution extends Model
     protected $fillable = [
         'client_id',
         'product_id',
-        'qty',
         'value',
         'number_nf',
         'date_nf',

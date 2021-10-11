@@ -31,11 +31,6 @@
                         <label class="text-xl text-gray-600">Modelo <span class="text-red-500">*</span></label></br>
                         <input type="text" disabled value="{{$devolution->product->name}}" class="border-2 border-gray-300 p-2 w-full" name="title" id="title" value="" required></input>
                     </div>
-
-                    <div class="mb-4">
-                        <label class="text-xl text-gray-600">Quantidade</label></br>
-                        <input type="text" value="{{$devolution->qty}}" disabled class="border-2 border-gray-300 p-2 w-full" name="description" id="description" placeholder="(Optional)"></input>
-                    </div>
                     <div class="mb-4">
                         <label class="text-xl text-gray-600">Valor Conforme NF Origem</label></br>
                         <input type="text" value="{{$devolution->value}}" disabled class="border-2 border-gray-300 p-2 w-full" name="description" id="description" placeholder="(Optional)"></input>

@@ -56,7 +56,6 @@ class ClientController extends Controller
             'password' => 'required',
             'email' => 'required|unique:users',
             'product_id' => 'required',
-            'qty' => 'required',
             'value' => 'required',
             'number_nf' => 'required',
             'date_nf' => 'required',
@@ -90,7 +89,6 @@ class ClientController extends Controller
                 $devolution = Devolution::create([
                     'client_id' => $client->id,
                     'product_id' => $request->product_id[$i],
-                    'qty' => $request->qty[$i],
                     'value' => $request->value[$i],
                     'number_nf' => $request->number_nf[$i],
                     'date_nf' => $request->date_nf[$i],

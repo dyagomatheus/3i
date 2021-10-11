@@ -140,7 +140,6 @@ class DashboardController extends Controller
         $user = Auth::user();
         $request->validate([
             'product_id' => 'required',
-            'qty' => 'required',
             'value' => 'required',
             'number_nf' => 'required',
             'date_nf' => 'required',
@@ -157,7 +156,6 @@ class DashboardController extends Controller
                 $devolution = Devolution::create([
                     'client_id' => $user->client_id,
                     'product_id' => $request->product_id,
-                    'qty' => $request->qty,
                     'value' => $request->value,
                     'number_nf' => $request->number_nf,
                     'date_nf' => $request->date_nf,

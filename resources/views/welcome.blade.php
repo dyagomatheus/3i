@@ -336,12 +336,6 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <input class="form-control" id="qty" name="qty[]" placeholder="Quantidade" type="text" required>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
                                         <input class="form-control" id="value[]" name="value[]" placeholder="Valor conforme NF Origem " type="text" required>
                                     </div>
                                 </div>

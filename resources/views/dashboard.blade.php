@@ -73,9 +73,6 @@
                         Cliente
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4">
-                        Quantidade
-                    </th>
-                    <th class="font-semibold text-sm uppercase px-6 py-4">
                         Valor NF
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4 text-center">
@@ -129,11 +126,6 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-gray-500 text-sm font-semibold tracking-wide">
-                                {{$devolution->qty}}
-                            </p>
                         </td>
                         <td class="px-6 py-4">
                             <p class="text-gray-500 text-sm font-semibold tracking-wide">

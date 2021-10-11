@@ -26,7 +26,6 @@
                 <td>{{ $devolution->client->name }}</td>
                 <td>{{ $devolution->number }}</td>
                 <td>{{ $devolution->product->name }}</td>
-                <td>{{ $devolution->qty }}</td>
                 <td>{{ $devolution->defect }}</td>
                 <td>{{ \App\Models\Devolution::status($devolution->id)->status ?? 'Enviado'}}</td>
                 <td>{{ \App\Models\Devolution::status($devolution->id)->created_at }}</td>
