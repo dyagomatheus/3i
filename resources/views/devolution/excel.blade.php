@@ -13,7 +13,6 @@
                 <th>Customer</th>
                 <th>Processo</th>
                 <th>Model</th>
-                <th>Amount</th>
                 <th>Defect</th>
                 <th>Status</th>
                 <th>Data</th>
