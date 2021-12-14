@@ -85,27 +85,28 @@ class ClientController extends Controller
             } while (Devolution::where("number", "=", $number)->first() instanceof Devolution);
 
             for ($i=0; $i < count($request->product_id); $i++) {
+                for ($j=1; $j <= $request->qty[$i]; $j++) {
+                    $devolution = Devolution::create([
+                        'client_id' => $client->id,
+                        'product_id' => $request->product_id[$i],
+                        'value' => $request->value[$i],
+                        'number_nf' => $request->number_nf[$i],
+                        'date_nf' => $request->date_nf[$i],
+                        'defect' => $request->defect[$i],
+                        'number' => $number,
+                        'status' => 'Enviado'
+                    ]);
 
-                $devolution = Devolution::create([
-                    'client_id' => $client->id,
-                    'product_id' => $request->product_id[$i],
-                    'value' => $request->value[$i],
-                    'number_nf' => $request->number_nf[$i],
-                    'date_nf' => $request->date_nf[$i],
-                    'defect' => $request->defect[$i],
-                    'number' => $number,
-                    'status' => 'Enviado'
-                ]);
+                    $comment = 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.';
+                    DevolutionStatus::create([
+                        'status' => 'Enviado',
+                        'devolution_id' => $devolution->id,
+                        'comment' => $comment
+                    ]);
 
-                $comment = 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.';
-                DevolutionStatus::create([
-                    'status' => 'Enviado',
-                    'devolution_id' => $devolution->id,
-                    'comment' => $comment
-                ]);
-
-                foreach ($devolution->client->users as $user) {
-                    $mail = $user->email;
+                    foreach ($devolution->client->users as $user) {
+                        $mail = $user->email;
+                    }
                 }
 
                 Mail::to($mail)->send(new MailDevolution('Enviado', $comment));

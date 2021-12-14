@@ -334,7 +334,7 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-md-4 mt-2">
                                     <div class="form-group">
                                         <input class="form-control" id="value[]" name="value[]" placeholder="Valor conforme NF Origem " type="text" required>
                                     </div>
@@ -363,8 +363,17 @@ Os produtos deverão estar acompanhados de nota fiscal de devolução, conforme 
                                         </select>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-success mt-4 mb-2" onclick="duplicarCampos()">Adicionar</button>
-                                <button type="button" class="btn btn-danger mt-4 mb-2" onclick="removerCampos()">Remover</button>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input class="form-control" id="qty" name="qty[]" placeholder="Quantidade" type="number" value="1">
+                                        <small id="emailHelp" class="form-text text-muted">Quantidade</small>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-end mb-4">
+                                    <button type="button" class="btn btn-success mt-4 mb-2" onclick="duplicarCampos()">Adicionar</button>
+                                    <button type="button" class="btn btn-danger mt-4 mb-2" onclick="removerCampos()">Remover</button>
+                                </div>
+
                               </div>
 
                               <div class="row p-3" id="destino">

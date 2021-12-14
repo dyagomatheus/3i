@@ -10,8 +10,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <h2>
                 <a class="px-4 py-2 text-xs font-semibold tracking-wider border-2 border-gray-300 rounded hover:bg-gray-200 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300" href="{{ URL::previous() }}">Voltar</a>
-                <a href="{{route('devolution.edit', $devolution->id)}}" class="text-purple-800 hover:underline">Editar</a>
-
+                @if (auth()->user()->type == 'admin')
+                    <a href="{{route('devolution.edit', $devolution->id)}}" class="text-purple-800 hover:underline">Editar</a>
+                @endif
             </h2>        <!-- This is an example component -->
         <div class="mb-8 flex items-center justify-center px-4">
 

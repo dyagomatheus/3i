@@ -49,7 +49,16 @@
                     </div>
                     <div class="mb-4">
                         <label class="text-xl text-gray-600">Defeito Apresentado</label></br>
-                        <input type="text" class="border-2 border-gray-300 p-2 w-full" name="defect" id="defect"></input>
+                        <select class="border-2 border-gray-300 p-2 w-full" name="defect" id="defect">
+                        @foreach ($defects as $defect)
+                            <option value="{{$defect->name}}">{{$defect->name}}</option>
+                        @endforeach
+                        <select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="text-xl text-gray-600">Quantidade</label></br>
+                        <input type="number" class="border-2 border-gray-300 p-2 w-full" name="qty" id="qty" value="1"></input>
                     </div>
 
                     <div class="flex p-1">

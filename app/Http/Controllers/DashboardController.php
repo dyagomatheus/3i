@@ -7,6 +7,7 @@ use App\Mail\Devolution as MailDevolution;
 use App\Mail\NewDevolution;
 use App\Models\Client;
 use App\Models\Devolution;
+use App\Models\Defect;
 use App\Models\DevolutionStatus;
 use App\Models\Product;
 use App\Models\User;
@@ -116,7 +117,7 @@ class DashboardController extends Controller
         if ($user->type != 'admin' ) {
             $devolution = Devolution::where('client_id', $user->client_id)->find($id);
 
-            if($devolution)
+            if(!$devolution)
                 return redirect()->back();
         }else{
             $devolution = Devolution::find($id);
@@ -130,8 +131,10 @@ class DashboardController extends Controller
     public function devolutionCreate()
     {
         $products = Product::all();
+        $defects = Defect::all();
         return view('devolution.new', [
-            'products' => $products
+            'products' => $products,
+            'defects' => $defects
         ]);
     }
 
@@ -153,6 +156,7 @@ class DashboardController extends Controller
                 $number = rand(100000, 999999);
             } while (Devolution::where("number", "=", $number)->first() instanceof Devolution);
 
+            for ($i=1; $i <= $request->qty; $i++) {
                 $devolution = Devolution::create([
                     'client_id' => $user->client_id,
                     'product_id' => $request->product_id,
@@ -175,13 +179,14 @@ class DashboardController extends Controller
 
                 Mail::to($mail)->send(new MailDevolution('Enviado', $comment));
                 Mail::to(env('MAIL_FROM_ADDRESS'))->send(new NewDevolution());
-
+            }
             DB::commit();
 
             return redirect()
                 ->route('login');
 
         } catch (\Throwable $th) {
+            dd($th);
             Log::info("error: Cadastro Cliente". $th->getMessage());
             return redirect()
                 ->back()
