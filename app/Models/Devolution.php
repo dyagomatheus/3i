@@ -21,7 +21,7 @@ class Devolution extends Model
         'date_nf',
         'defect',
         'status',
-        'number'
+        'group_id'
     ];
 
     /**
@@ -69,5 +69,15 @@ class Devolution extends Model
     public function getLastStatus(): HasOne
     {
         return $this->hasOne(DevolutionStatus::class)->orderBy('id', 'desc');
+    }
+
+    /**
+     * Get the user that owns the Devolution
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(ProcessDevolution::class, 'group_id', 'id');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNumberColumnInDevolutionsTable extends Migration
+class CreateProcessStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class AddNumberColumnInDevolutionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('devolutions', function (Blueprint $table) {
+        Schema::create('process_statuses', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('group_id')->nullable();
             $table->foreign('group_id')->references('id')->on('process_devolutions')->onDelete('cascade');
-            $table->string('status')->nullable();
-
+            $table->string('status');
+            $table->text('comment')->nullable();
+            $table->string('time')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -28,9 +31,6 @@ class AddNumberColumnInDevolutionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('devolutions', function (Blueprint $table) {
-            $table->dropColumn('group_id');
-            $table->dropColumn('status');
-        });
+        Schema::dropIfExists('process_statuses');
     }
 }

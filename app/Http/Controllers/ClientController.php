@@ -8,6 +8,8 @@ use App\Models\Client;
 use App\Models\Devolution;
 use App\Models\DevolutionStatus;
 use App\Models\User;
+use App\Models\ProcessDevolution;
+use App\Models\ProcessStatus;
 use Illuminate\Database\Events\TransactionBeginning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -82,7 +84,18 @@ class ClientController extends Controller
 
             do {
                 $number = rand(100000, 999999);
-            } while (Devolution::where("number", "=", $number)->first() instanceof Devolution);
+            } while (ProcessDevolution::where("number", "=", $number)->first() instanceof Devolution);
+
+            $group = ProcessDevolution::create([
+                'number' => $number,
+                'client_id' =>  $client->id
+            ]);
+
+            ProcessStatus::create([
+                'status' => 'Enviado',
+                'group_id' => $group->id,
+                'comment' => 'Seu pedido foi enviado com sucesso, em breve retornaremos o contato.'
+            ]);
 
             for ($i=0; $i < count($request->product_id); $i++) {
                 for ($j=1; $j <= $request->qty[$i]; $j++) {
@@ -93,7 +106,7 @@ class ClientController extends Controller
                         'number_nf' => $request->number_nf[$i],
                         'date_nf' => $request->date_nf[$i],
                         'defect' => $request->defect[$i],
-                        'number' => $number,
+                        'group_id' => $group->id,
                         'status' => 'Enviado'
                     ]);
 

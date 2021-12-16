@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
-class DashboardController extends Controller
+class DevolutionController extends Controller
 {
     public function index()
     {
@@ -30,64 +30,66 @@ class DashboardController extends Controller
             session()->forget('date');
             session()->forget('status');
 
+            $products = Product::get();
             $clients = Client::get();
-            $groups = ProcessDevolution::paginate(5);
+            $devolutions = Devolution::paginate(5);
 
             return view('dashboard', [
-                'groups' => $groups,
+                'devolutions' => $devolutions,
                 'clients' => $clients,
+                'products' => $products
             ]);
 
         }else{
-            $groups = Devolution::where('client_id', auth()->user()->client_id)->paginate(5);
+            $devolutions = Devolution::where('client_id', auth()->user()->client_id)->paginate(5);
 
             return view('dashboard', [
-                'groups' => $groups
+                'devolutions' => $devolutions
             ]);
         }
     }
 
-    public function groupEdit($id)
+    public function devolutionEdit($id)
     {
         if (auth()->user()->type != 'admin') {
             return redirect()->back();
         }
 
-        $group = ProcessDevolution::find($id);
+        $devolution = Devolution::find($id);
 
-        return view('group.edit', [
-            'group' => $group
+        return view('devolution.edit', [
+            'devolution' => $devolution
         ]);
 
     }
 
 
-    public function groupUpdate(Request $request, $id)
+    public function devolutionUpdate(Request $request, $id)
     {
         if (auth()->user()->type != 'admin') {
             return redirect()->back();
         }
-        $group = ProcessDevolution::find($id);
+        $devolution = Devolution::find($id);
         try {
             DB::beginTransaction();
 
-            $status = ProcessDevolution::status($id);
+            $status = Devolution::status($id);
             $today = new DateTime();
 
             $lastUpdate = new DateTime($status->created_at);
             $status->time = $lastUpdate->diff($today)->d .' Dias e ' . $lastUpdate->diff($today)->h . ' Horas';
             $status->save();
 
-            ProcessStatus::create([
+            DevolutionStatus::create([
                 'status' => $request->status,
-                'group_id' => $id,
+                'devolution_id' => $id,
                 'comment' => $request->comment,
             ]);
 
-            $group->status = $request->status;
-            $group->save();
+            $devolution->status = $request->status;
+            $devolution->save();
 
-            foreach ($group->client->users as $user) {
+            foreach ($devolution->client->users as $user) {
                 $mail = $user->email;
             }
 
@@ -100,7 +102,6 @@ class DashboardController extends Controller
                 ->with('success', 'Pedido atualizado com sucesso!');
 
         } catch (\Throwable $th) {
-            dd($th->getMessage());
             DB::rollback();
             Log::info("error: Atualização Pedido". $th->getMessage());
             return redirect()
@@ -110,25 +111,25 @@ class DashboardController extends Controller
 
     }
 
-    public function groupShow($id)
+    public function devolutionShow($id)
     {
         $user = Auth::user();
 
         if ($user->type != 'admin' ) {
-            $group = ProcessDevolution::where('client_id', $user->client_id)->find($id);
+            $devolution = Devolution::where('client_id', $user->client_id)->find($id);
 
-            if(!$group)
+            if(!$devolution)
                 return redirect()->back();
         }else{
-            $group = ProcessDevolution::find($id);
+            $devolution = Devolution::find($id);
         }
 
-        return view('group.details', [
-            'group' => $group
+        return view('devolution.details', [
+            'devolution' => $devolution
         ]);
     }
 
-    public function groupCreate()
+    public function devolutionCreate()
     {
         $products = Product::all();
         $defects = Defect::all();
@@ -138,7 +139,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function groupStore(Request $request)
+    public function devolutionStore(Request $request)
     {
         $user = Auth::user();
         $request->validate([
@@ -206,33 +207,39 @@ class DashboardController extends Controller
         }
     }
 
-    public function groupSearch(Request $request)
+    public function devolutionSearch(Request $request)
     {
         if (auth()->user()->type == 'admin') {
+            $products = Product::get();
             $clients = Client::get();
-            $groups = ProcessDevolution::whereNotNull('client_id');
+            $devolutions = Devolution::whereNotNull('product_id');
 
-            // session()->put('product_id', $request->product_id);
+            session()->put('product_id', $request->product_id);
             session()->put('client_id', $request->client_id);
             session()->put('date', $request->date);
             session()->put('status', $request->status);
 
             if($request->client_id) {
-                $groups = $groups->where('client_id', $request->client_id);
+                $devolutions = $devolutions->where('client_id', $request->client_id);
+            }
+
+            if($request->product_id) {
+                $devolutions = $devolutions->where('product_id', $request->product_id);
             }
 
             if($request->date) {
-                $groups = $groups->whereDate('created_at', $request->date);
+                $devolutions = $devolutions->whereDate('created_at', $request->date);
             }
 
             if($request->status) {
-                $groups = $groups->where('status', 'like', '%'.$request->status.'%');
+                $devolutions = $devolutions->where('status', 'like', '%'.$request->status.'%');
             }
 
-            $groups = $groups->paginate(10000);
+            $devolutions = $devolutions->paginate(10000);
             return view('dashboard', [
-                'groups' => $groups,
-                'clients' => $clients
+                'devolutions' => $devolutions,
+                'clients' => $clients,
+                'products' => $products
             ]);
 
         }
@@ -245,6 +252,10 @@ class DashboardController extends Controller
 
             if(session()->get('client_id')) {
                 $devolutions = $devolutions->where('client_id', session()->get('client_id'));
+            }
+
+            if(session()->get('product_id')) {
+                $devolutions = $devolutions->where('product_id', session()->get('product_id'));
             }
 
             if(session()->get('date')) {

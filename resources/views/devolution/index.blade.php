@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('Produtos') }}
         </h2>
     </x-slot>
 
@@ -9,12 +9,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    Devoluções
+                    PROCESSO: #{{$group->number}}
                 </div>
             </div>
             @if (auth()->user()->type == 'admin')
             <div class="overflow-hidden shadow-sm sm:rounded-lg">
-                <form action="{{route('group.search')}}" method="POST" class="ml-2">
+                <form action="{{route('devolution.search')}}" method="POST" class="ml-2">
                     @csrf
                     <div class="relative mr-6 my-2">
                         <select name="status" id="status" class="bg-purple-white shadow rounded border-0 p-3">
@@ -30,6 +30,12 @@
                             <option value="" disabled selected>-- Pesquisar Cliente -- </option>
                             @foreach ($clients as $client)
                                 <option value="{{$client->id}}" {{session('client_id') == $client->id ? 'selected' : ''}}>{{$client->name}}</option>
+                            @endforeach
+                        </select>
+                        <select name="product_id" id="product_id" class="bg-purple-white shadow rounded border-0 p-3">
+                            <option value="" disabled selected>-- Pesquisar Produto -- </option>
+                            @foreach ($products as $product)
+                                <option value="{{$product->id}}" {{session('product_id') == $product->id ? 'selected' : ''}}>{{$product->name}}</option>
                             @endforeach
                         </select>
                         <button
@@ -61,7 +67,16 @@
                         Processo
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4">
+                        Produto
+                    </th>
+                    <th class="font-semibold text-sm uppercase px-6 py-4">
                         Cliente
+                    </th>
+                    <th class="font-semibold text-sm uppercase px-6 py-4">
+                        Valor NF
+                    </th>
+                    <th class="font-semibold text-sm uppercase px-6 py-4 text-center">
+                        Número NF
                     </th>
                     <th class="font-semibold text-sm uppercase px-6 py-4 text-center">
                         status
@@ -78,13 +93,13 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach ($groups as $group)
+                @foreach ($devolutions as $devolution)
                     <tr>
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-3">
                                 <div>
                                     <p class="">
-                                        {{$group->number}}
+                                        {{$devolution->group->number}}
                                     </p>
                                 </div>
                             </div>
@@ -93,29 +108,51 @@
                             <div class="flex items-center space-x-3">
                                 <div>
                                     <p class="">
-                                        {{$group->client->name}}
+                                        {{$devolution->product->name}}
                                     </p>
                                 </div>
                             </div>
                         </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                <div>
+                                    <p class="">
+                                        {{$devolution->client->name}}
+                                    </p>
+                                    @foreach ($devolution->client->users as $user)
+                                        <p class="text-gray-500 text-sm font-semibold tracking-wide">
+                                            {{$user->email}}
+                                        </p>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <p class="text-gray-500 text-sm font-semibold tracking-wide">
+                                {{$devolution->value}}
+                            </p>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            {{$devolution->number_nf}}
+                        </td>
                         <td class="px-6 py-4 text-center">
                             <span class="text-black-800 bg-blue-200 font-semibold px-2 rounded-full">
-                                {{ \App\Models\ProcessDevolution::status($group->id)->status ?? 'Enviado'}}
+                                {{ \App\Models\Devolution::status($devolution->id)->status ?? 'Enviado'}}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <a href="{{route('group.show', $group->id)}}" class="text-purple-800 hover:underline">Detalhes</a>
+                            <a href="{{route('devolution.show', $devolution->id)}}" class="text-purple-800 hover:underline">Detalhes</a>
                         </td>
                         @if (auth()->user()->type == 'admin')
                         <td class="px-6 py-4 text-center">
-                            <a href="{{route('group.edit', $group->id)}}" class="text-purple-800 hover:underline">Editar</a>
+                            <a href="{{route('devolution.edit', $devolution->id)}}" class="text-purple-800 hover:underline">Editar</a>
                         </td>
                         @endif
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        {{$groups->links()}}
+        {{$devolutions->links()}}
 
         </div>
     </div>
